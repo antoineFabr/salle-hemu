@@ -1,3 +1,4 @@
+import { ReserveProvider } from "@/context/reserve";
 
 export default function DashboardLayout({
   children,
@@ -6,7 +7,9 @@ export default function DashboardLayout({
 }>) {
   return (
     <div>
+      <ReserveProvider>
         {children}
+      </ReserveProvider>
     </div>
   );
 }

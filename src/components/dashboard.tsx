@@ -17,13 +17,15 @@ import type { User } from "@/types/user"
 import { Salle } from "@/types/planning"
 import { Instrument } from "@/types/instrument"
 import { RoomScheduler } from "./scheduler"
+import { ReserveSheet } from "./reserve";
 import { LoadingProvider } from "@/context/loading";
 
 export function DashBoard({ user, planning, instruments }: { user: User, planning: Salle[], instruments: Instrument[] }) {
 
   return (
-    <LoadingProvider >
-    <SidebarProvider>
+    <LoadingProvider>
+      <ReserveSheet/>
+      <SidebarProvider>
       <AppSidebar user={user} instruments={instruments}/>
       <SidebarInset>
         <header className="sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">

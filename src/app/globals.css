@@ -177,3 +177,14 @@
 .root_event_bar {
   display: none !important;
 }
+
+.root_shadow {
+  background-color: oklch(0.432 0.095 166.913 / 30%) !important;
+  border: 2px dashed oklch(0.432 0.095 166.913) !important;
+  border-radius: var(--radius-sm) !important;
+  opacity: 1 !important;
+}
+
+.root_shadow_inner {
+  background: transparent !important;
+}
