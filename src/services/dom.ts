@@ -32,12 +32,13 @@ export async function getHTML(options: PlanningOptions): Promise<string> {
 
   if (options.date) {
     queryParts.push(`position=${formatPlanningDate(options.date)}`);
+  } else {
+    queryParts.push(`position=${formatPlanningDate(new Date)}`);
   }
 
   if (options.instruments) {
     queryParts.push(`instrument=${options.instruments}`);
   }
-
   const finalUrl = queryParts.length > 0
     ? `${baseUrl}?${queryParts.join("&")}`
     : baseUrl;
@@ -47,6 +48,5 @@ export async function getHTML(options: PlanningOptions): Promise<string> {
       Cookie: session.phpCookie
     }
   });
-
   return res.data;
 }

@@ -1,7 +1,7 @@
 "use client";
 import { DayPilotCalendar, DayPilot } from "@daypilot/daypilot-lite-react";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Salle } from "@/types/planning";
@@ -10,28 +10,43 @@ import { useLoading } from "@/context/loading"
 import LoadingDashboard from "@/app/dashboard/loading"
 import { useReserve } from "@/context/reserve";
 
-const COLONNES_VISIBLES = 10;
-
 type Props = { salles: Salle[] };
 
 export function RoomScheduler({ salles }: Props) {
-  const { isOpen, setIsOpen } = useReserve();
+  const { isOpen, setIsOpen, setForm } = useReserve();
   const searchParams = useSearchParams();
   const dateString = searchParams.get("date");
   const date = dateString ? new Date(dateString) : new Date();
   const startDate = date.toISOString().split("T")[0];
 
   const [offset, setOffset] = useState(0);
+  const [columnsCount, setColumnsCount] = useState(10);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 640) {
+        setColumnsCount(3);
+      } else if (width < 1024) {
+        setColumnsCount(5);
+      } else {
+        setColumnsCount(10);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const allColumns = toColumns(salles);
   const allEvents = toEvents(salles, date);
 
-  const visibleColumns = allColumns.slice(offset, offset + COLONNES_VISIBLES);
+  const visibleColumns = allColumns.slice(offset, offset + columnsCount);
   const visibleSalleIds = new Set(visibleColumns.map((c) => c.id));
   const visibleEvents = allEvents.filter((e) => visibleSalleIds.has(e.resource));
 
   const canPrev = offset > 0;
-  const canNext = offset + COLONNES_VISIBLES < allColumns.length;
+  const canNext = offset + columnsCount < allColumns.length;
   const { isPending } = useLoading();
 
   if (isPending) return <LoadingDashboard />;
@@ -51,6 +66,13 @@ export function RoomScheduler({ salles }: Props) {
       args.control.clearSelection();
       return;
     }
+    setForm({
+      comment: "",
+      date: new Date(selectedStart.toString()),
+      start: new Date(selectedStart.toString()),
+      end: new Date(selectedEnd.toString()),
+      salleId: selectedSalleId.toString(),
+    })
     setIsOpen(true);
 
   };
@@ -60,18 +82,18 @@ export function RoomScheduler({ salles }: Props) {
         <Button
           variant="outline"
           size="icon"
-          onClick={() => setOffset((o) => Math.max(0, o - COLONNES_VISIBLES))}
+          onClick={() => setOffset((o) => Math.max(0, o - columnsCount))}
           disabled={!canPrev}
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
         <span className="text-sm text-muted-foreground">
-          Salles {offset + 1} – {Math.min(offset + COLONNES_VISIBLES, allColumns.length)} / {allColumns.length}
+          Salles {offset + 1} – {Math.min(offset + columnsCount, allColumns.length)} / {allColumns.length}
         </span>
         <Button
           variant="outline"
           size="icon"
-          onClick={() => setOffset((o) => Math.min(allColumns.length - COLONNES_VISIBLES, o + COLONNES_VISIBLES ))}
+          onClick={() => setOffset((o) => Math.min(allColumns.length - columnsCount, o + columnsCount ))}
           disabled={!canNext}
         >
           <ChevronRight className="h-4 w-4" />
