@@ -1,0 +1,4 @@
+image: fabreantoine/salle-hemu
+version: 1.0.0
+app: salle-hemu
+secrets: "{{ lookup('pipe', 'keybase fs read /keybase/team/audiohub/secrets.yml') | from_yaml }}"

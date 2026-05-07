@@ -1,0 +1,20 @@
+- name: namespace
+  hosts: all
+  roles:
+    - role: roles/namespace
+  tags:
+    - namespace
+
+- name: nginx
+  hosts: all
+  roles:
+    - role: roles/nginx
+  tags:
+    - nginx
+
+- name: web
+  hosts: all
+  roles:
+    - role: roles/web
+  tags:
+    - web
