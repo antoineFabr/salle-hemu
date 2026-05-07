@@ -23,7 +23,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           mdp: password,
           connecter: "valider"
         });
-
+        if (res.data.includes("S'identifier en tant qu'utilisateur EJMA")) return null
         const setCookieHeader = res.headers['set-cookie'];
         if (setCookieHeader) {
           const cookie = setCookieHeader[0].split(";")[0]
