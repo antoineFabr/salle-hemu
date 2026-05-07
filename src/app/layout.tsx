@@ -33,6 +33,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         {children}
+        <script defer src="https://umami.audiohub.art/script.js" data-website-id="b2844440-ecc8-46f0-87b7-5b241407cdd8"></script>
         <Toaster/>
       </body>
     </html>

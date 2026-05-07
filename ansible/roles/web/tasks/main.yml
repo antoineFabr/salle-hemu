@@ -3,15 +3,15 @@
     file: secrets.yml
     apply:
       tags:
-        - frontend.secrets
+        - web.secrets
   tags:
-    - frontend.secrets
+    - web.secrets
 
-- name: Deploy frontend
+- name: Deploy web
   include_tasks:
-    file: frontend.yml
+    file: web.yml
     apply:
       tags:
-        - frontend.frontend
+        - web.web
   tags:
-    - frontend.frontend
+    - web.web
